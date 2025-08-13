@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roles and Permissions Assignment</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+
+        /* Header Styles */
+        .header {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .logo-text h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin: 0;
+        }
+
+        .logo-text p {
+            font-size: 12px;
+            color: #7f8c8d;
+            margin: 0;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #34495e;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: #667eea;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #667eea;
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Main Content */
+        .main-container {
+            max-width: 1400px;
+            margin: 30px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        /* Left Panel - Roles and Permissions */
+        .left-panel {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            height: fit-content;
+        }
+
+        .panel-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #ecf0f1;
+        }
+
+        .role-selector {
+            margin-bottom: 25px;
+        }
+
+        .role-selector label {
+            display: block;
+            font-weight: 600;
+            color: #34495e;
+            margin-bottom: 8px;
+        }
+
+        .role-selector select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e1e8ed;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+            transition: border-color 0.3s ease;
+            cursor: pointer;
+        }
+
+        .role-selector select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        /* Treeview Styles */
+        .treeview {
+            list-style: none;
+        }
+
+        .treeview-item {
+            margin-bottom: 8px;
+        }
+
+        .treeview-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            user-select: none;
+        }
+
+        .treeview-header:hover {
+            background-color: #f8f9fa;
+        }
+
+        .treeview-header.expanded {
+            background-color: #e3f2fd;
+        }
+
+        .treeview-toggle {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s ease;
+            color: #7f8c8d;
+        }
+
+        .treeview-toggle.expanded {
+            transform: rotate(90deg);
+            color: #667eea;
+        }
+
+        .treeview-checkbox {
+            width: 18px;
+            height: 18px;
+            accent-color: #667eea;
+            cursor: pointer;
+        }
+
+        .treeview-icon {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #7f8c8d;
+        }
+
+        .treeview-label {
+            flex: 1;
+            font-weight: 500;
+            color: #2c3e50;
+        }
+
+        .treeview-children {
+            list-style: none;
+            margin-left: 30px;
+            margin-top: 8px;
+            display: none;
+        }
+
+        .treeview-children.expanded {
+            display: block;
+        }
+
+        .treeview-children .treeview-item {
+            margin-bottom: 6px;
+        }
+
+        .treeview-children .treeview-header {
+            padding: 6px 10px;
+        }
+
+        .highlighted {
+            background-color: #e3f2fd !important;
+            border-left: 3px solid #667eea;
+        }
+
+        .document-access-control {
+            margin-top: 25px;
+            padding: 20px;
+            border: 2px solid #2c3e50;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        }
+
+        .document-access-control .treeview-header {
+            background: transparent;
+            padding: 0;
+            margin-bottom: 10px;
+        }
+
+        .document-access-control .treeview-checkbox {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Right Panel - MDL Descriptions */
+        .right-panel {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .search-box {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-box input {
+            padding: 10px 15px 10px 40px;
+            border: 2px solid #e1e8ed;
+            border-radius: 25px;
+            font-size: 14px;
+            width: 250px;
+            transition: border-color 0.3s ease;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 15px;
+            color: #7f8c8d;
+        }
+
+        /* Table Styles */
+        .table-container {
+            overflow-x: auto;
+            border-radius: 8px;
+            border: 1px solid #e1e8ed;
+        }
+
+        .mdl-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        .mdl-table th {
+            background: #f8f9fa;
+            padding: 15px 12px;
+            text-align: left;
+            font-weight: 600;
+            color: #2c3e50;
+            border-bottom: 2px solid #e1e8ed;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            user-select: none;
+        }
+
+        .mdl-table th:hover {
+            background: #e9ecef;
+        }
+
+        .mdl-table th.sortable {
+            position: relative;
+            padding-right: 25px;
+        }
+
+        .sort-icon {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #7f8c8d;
+            font-size: 12px;
+        }
+
+        .sort-icon.asc {
+            color: #667eea;
+        }
+
+        .sort-icon.desc {
+            color: #667eea;
+            transform: translateY(-50%) rotate(180deg);
+        }
+
+        .mdl-table td {
+            padding: 12px;
+            border-bottom: 1px solid #f1f3f4;
+            color: #2c3e50;
+        }
+
+        .mdl-table tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .access-checkbox {
+            width: 18px;
+            height: 18px;
+            accent-color: #667eea;
+            cursor: pointer;
+        }
+
+        /* Pagination */
+        .pagination-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            padding: 20px 0;
+            border-top: 1px solid #e1e8ed;
+        }
+
+        .pagination-info {
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+
+        .pagination-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .pagination-btn {
+            padding: 8px 12px;
+            border: 1px solid #e1e8ed;
+            background: white;
+            color: #34495e;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 14px;
+        }
+
+        .pagination-btn:hover {
+            background: #f8f9fa;
+            border-color: #667eea;
+        }
+
+        .pagination-btn.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .pagination-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .items-per-page {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .items-per-page select {
+            padding: 6px 10px;
+            border: 1px solid #e1e8ed;
+            border-radius: 4px;
+            background: white;
+            cursor: pointer;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .main-container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .nav-links {
+                gap: 20px;
+            }
+
+            .search-box input {
+                width: 200px;
+            }
+
+            .table-container {
+                font-size: 14px;
+            }
+
+            .mdl-table th,
+            .mdl-table td {
+                padding: 10px 8px;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .left-panel,
+        .right-panel {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .treeview-children {
+            transition: all 0.3s ease;
+        }
+
+        /* Custom Scrollbar */
+        .table-container::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .table-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        .table-container::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+        }
+
+        .table-container::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon">V</div>
+                <div class="logo-text">
+                    <h1>VISIONET</h1>
+                    <p>Engineering. Simplified.</p>
+                </div>
+            </div>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="#home">HOME</a></li>
+                    <li><a href="#vendor">VENDOR PORTAL</a></li>
+                    <li><a href="#about">ABOUT US</a></li>
+                    <li><a href="#contact">CONTACT US</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <!-- Left Panel - Roles and Permissions -->
+        <div class="left-panel">
+            <h2 class="panel-title">ROLES AND PERMISSIONS ASSIGNMENT</h2>
+            
+            <div class="role-selector">
+                <label for="roleSelect">Role</label>
+                <select id="roleSelect">
+                    <option value="abc" selected>abc</option>
+                    <option value="admin">Administrator</option>
+                    <option value="user">User</option>
+                    <option value="manager">Manager</option>
+                    <option value="viewer">Viewer</option>
+                </select>
+            </div>
+
+            <ul class="treeview" id="permissionsTree">
+                <li class="treeview-item">
+                    <div class="treeview-header expanded" data-expanded="true">
+                        <i class="treeview-toggle expanded fas fa-chevron-right"></i>
+                        <input type="checkbox" class="treeview-checkbox" checked>
+                        <i class="treeview-icon fas fa-folder"></i>
+                        <span class="treeview-label">Modules</span>
+                    </div>
+                    <ul class="treeview-children expanded">
+                        <li class="treeview-item">
+                            <div class="treeview-header">
+                                <input type="checkbox" class="treeview-checkbox" checked>
+                                <i class="treeview-icon fas fa-file-alt"></i>
+                                <span class="treeview-label">Batch Export</span>
+                            </div>
+                        </li>
+                        <li class="treeview-item">
+                            <div class="treeview-header">
+                                <input type="checkbox" class="treeview-checkbox" checked>
+                                <i class="treeview-icon fas fa-file-alt"></i>
+                                <span class="treeview-label">Edit Profile</span>
+                            </div>
+                        </li>
+                        <li class="treeview-item">
+                            <div class="treeview-header">
+                                <input type="checkbox" class="treeview-checkbox" checked>
+                                <i class="treeview-icon fas fa-file-alt"></i>
+                                <span class="treeview-label">Loan Shifting & Deletion Tracker</span>
+                            </div>
+                        </li>
+                        <li class="treeview-item">
+                            <div class="treeview-header" data-expanded="true">
+                                <i class="treeview-toggle expanded fas fa-chevron-right"></i>
+                                <input type="checkbox" class="treeview-checkbox" checked>
+                                <i class="treeview-icon fas fa-folder"></i>
+                                <span class="treeview-label">Loans Portal</span>
+                            </div>
+                            <ul class="treeview-children expanded">
+                                <li class="treeview-item">
+                                    <div class="treeview-header">
+                                        <input type="checkbox" class="treeview-checkbox" checked>
+                                        <i class="treeview-icon fas fa-file-alt"></i>
+                                        <span class="treeview-label">Document Center</span>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="treeview-item">
+                            <div class="treeview-header">
+                                <input type="checkbox" class="treeview-checkbox" checked>
+                                <i class="treeview-icon fas fa-file-alt"></i>
+                                <span class="treeview-label">Role Assignment</span>
+                            </div>
+                        </li>
+                        <li class="treeview-item">
+                            <div class="treeview-header">
+                                <input type="checkbox" class="treeview-checkbox" checked>
+                                <i class="treeview-icon fas fa-file-alt"></i>
+                                <span class="treeview-label">Create User</span>
+                            </div>
+                        </li>
+                        <li class="treeview-item">
+                            <div class="treeview-header">
+                                <input type="checkbox" class="treeview-checkbox" checked>
+                                <i class="treeview-icon fas fa-file-alt"></i>
+                                <span class="treeview-label">Maintain Users</span>
+                            </div>
+                        </li>
+                        <li class="treeview-item">
+                            <div class="treeview-header">
+                                <input type="checkbox" class="treeview-checkbox" checked>
+                                <i class="treeview-icon fas fa-file-alt"></i>
+                                <span class="treeview-label">DI/DE Request Log</span>
+                            </div>
+                        </li>
+                        <li class="treeview-item">
+                            <div class="treeview-header highlighted">
+                                <input type="checkbox" class="treeview-checkbox" checked>
+                                <i class="treeview-icon fas fa-file-alt"></i>
+                                <span class="treeview-label">Event History</span>
+                            </div>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+
+            <div class="document-access-control">
+                <div class="treeview-header">
+                    <input type="checkbox" class="treeview-checkbox" checked>
+                    <i class="treeview-icon fas fa-shield-alt"></i>
+                    <span class="treeview-label">Document Access Control</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Panel - MDL Descriptions -->
+        <div class="right-panel">
+            <div class="table-header">
+                <h2 class="panel-title">MDL Descriptions</h2>
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Search MDL descriptions...">
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table class="mdl-table" id="mdlTable">
+                    <thead>
+                        <tr>
+                            <th class="sortable" data-sort="description">
+                                MDL Description
+                                <i class="sort-icon fas fa-sort"></i>
+                            </th>
+                            <th class="sortable" data-sort="key">
+                                MDL Key
+                                <i class="sort-icon fas fa-sort"></i>
+                            </th>
+                            <th class="sortable" data-sort="access">
+                                Access
+                                <i class="sort-icon fas fa-sort"></i>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="mdlTableBody">
+                        <!-- Table rows will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="pagination-container">
+                <div class="pagination-info">
+                    Showing <span id="startEntry">1</span> to <span id="endEntry">10</span> of <span id="totalEntries">754</span> entries
+                </div>
+                <div class="pagination-controls">
+                    <button class="pagination-btn" id="firstPage" title="First page">
+                        <i class="fas fa-angle-double-left"></i>
+                    </button>
+                    <button class="pagination-btn" id="prevPage" title="Previous page">
+                        <i class="fas fa-angle-left"></i>
+                    </button>
+                    <div id="pageNumbers" class="pagination-controls"></div>
+                    <button class="pagination-btn" id="nextPage" title="Next page">
+                        <i class="fas fa-angle-right"></i>
+                    </button>
+                    <button class="pagination-btn" id="lastPage" title="Last page">
+                        <i class="fas fa-angle-double-right"></i>
+                    </button>
+                    <div class="items-per-page">
+                        <span>Show:</span>
+                        <select id="itemsPerPage">
+                            <option value="10" selected>10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample MDL data
+        const mdlData = [
+            { description: "13 Point PreSale Certificate", key: "556", access: true },
+            { description: "203K Closeout Package", key: "789", access: true },
+            { description: "203K Extension Documents", key: "791", access: true },
+            { description: "203K Interim Draw Request", key: "788", access: true },
+            { description: "401K Letter", key: "254", access: true },
+            { description: "4506", key: "78", access: true },
+            { description: "Ability To Repay Worksheet", key: "913", access: true },
+            { description: "Account Activity Letter", key: "258", access: true },
+            { description: "Account Paid In Full Letter", key: "271", access: true },
+            { description: "ACH Form", key: "179", access: true },
+            { description: "Additional Borrower Information", key: "456", access: true },
+            { description: "Adjustable Rate Note", key: "789", access: true },
+            { description: "Affidavit of Completion", key: "234", access: true },
+            { description: "Agreement to Provide Insurance", key: "567", access: true },
+            { description: "Amortization Schedule", key: "890", access: true },
+            { description: "Application for Insurance", key: "123", access: true },
+            { description: "Assignment of Mortgage", key: "456", access: true },
+            { description: "Authorization to Release Information", key: "789", access: true },
+            { description: "Balloon Note", key: "012", access: true },
+            { description: "Borrower Authorization", key: "345", access: true },
+            { description: "Cash to Close", key: "678", access: true },
+            { description: "Certificate of Completion", key: "901", access: true },
+            { description: "Change of Circumstance", key: "234", access: true },
+            { description: "Closing Disclosure", key: "567", access: true },
+            { description: "Construction Loan Agreement", key: "890", access: true },
+            { description: "Credit Report", key: "123", access: true },
+            { description: "Deed of Trust", key: "456", access: true },
+            { description: "Disclosure Statement", key: "789", access: true },
+            { description: "Escrow Agreement", key: "012", access: true },
+            { description: "Final Inspection Report", key: "345", access: true },
+            { description: "Flood Certificate", key: "678", access: true },
+            { description: "Good Faith Estimate", key: "901", access: true },
+            { description: "HUD-1 Settlement Statement", key: "234", access: true },
+            { description: "Income Verification", key: "567", access: true },
+            { description: "Insurance Certificate", key: "890", access: true },
+            { description: "Loan Estimate", key: "123", access: true },
+            { description: "Mortgage Note", key: "456", access: true },
+            { description: "Notice of Right to Cancel", key: "789", access: true },
+            { description: "Occupancy Affidavit", key: "012", access: true },
+            { description: "Payment History", key: "345", access: true },
+            { description: "Preliminary Title Report", key: "678", access: true },
+            { description: "Property Appraisal", key: "901", access: true },
+            { description: "Purchase Agreement", key: "234", access: true },
+            { description: "Qualification Worksheet", key: "567", access: true },
+            { description: "Rate Lock Agreement", key: "890", access: true },
+            { description: "Satisfaction of Mortgage", key: "123", access: true },
+            { description: "Tax Return Transcript", key: "456", access: true },
+            { description: "Title Insurance Policy", key: "789", access: true },
+            { description: "Underwriting Conditions", key: "012", access: true },
+            { description: "Verification of Employment", key: "345", access: true },
+            { description: "W-2 Form", key: "678", access: true },
+            { description: "Warranty Deed", key: "901", access: true },
+            { description: "X-Ray Report", key: "234", access: true },
+            { description: "Yield Spread Premium", key: "567", access: true },
+            { description: "Zoning Certificate", key: "890", access: true }
+        ];
+
+        // Pagination variables
+        let currentPage = 1;
+        let itemsPerPage = 10;
+        let filteredData = [...mdlData];
+        let sortColumn = 'description';
+        let sortDirection = 'asc';
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeTreeview();
+            initializeTable();
+            initializePagination();
+            initializeSearch();
+            initializeSorting();
+        });
+
+        // Treeview functionality
+        function initializeTreeview() {
+            const treeviewHeaders = document.querySelectorAll('.treeview-header[data-expanded]');
+            
+            treeviewHeaders.forEach(header => {
+                header.addEventListener('click', function(e) {
+                    if (e.target.classList.contains('treeview-checkbox')) return;
+                    
+                    const isExpanded = this.getAttribute('data-expanded') === 'true';
+                    const toggle = this.querySelector('.treeview-toggle');
+                    const children = this.nextElementSibling;
+                    
+                    if (isExpanded) {
+                        this.setAttribute('data-expanded', 'false');
+                        toggle.classList.remove('expanded');
+                        children.classList.remove('expanded');
+                    } else {
+                        this.setAttribute('data-expanded', 'true');
+                        toggle.classList.add('expanded');
+                        children.classList.add('expanded');
+                    }
+                });
+            });
+
+            // Checkbox functionality
+            const checkboxes = document.querySelectorAll('.treeview-checkbox');
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const header = this.closest('.treeview-header');
+                    const children = header.nextElementSibling;
+                    
+                    if (children && children.classList.contains('treeview-children')) {
+                        const childCheckboxes = children.querySelectorAll('.treeview-checkbox');
+                        childCheckboxes.forEach(childCheckbox => {
+                            childCheckbox.checked = this.checked;
+                        });
+                    }
+                });
+            });
+        }
+
+        // Table functionality
+        function initializeTable() {
+            renderTable();
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('mdlTableBody');
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const pageData = filteredData.slice(startIndex, endIndex);
+
+            tbody.innerHTML = pageData.map(item => `
+                <tr>
+                    <td>${item.description}</td>
+                    <td>${item.key}</td>
+                    <td>
+                        <input type="checkbox" class="access-checkbox" ${item.access ? 'checked' : ''}>
+                    </td>
+                </tr>
+            `).join('');
+
+            updatePaginationInfo();
+        }
+
+        // Pagination functionality
+        function initializePagination() {
+            const pageNumbers = document.getElementById('pageNumbers');
+            const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+            
+            pageNumbers.innerHTML = '';
+            
+            for (let i = 1; i <= totalPages; i++) {
+                if (i === 1 || i === totalPages || (i >= currentPage - 2 && i <= currentPage + 2)) {
+                    const pageBtn = document.createElement('button');
+                    pageBtn.className = `pagination-btn ${i === currentPage ? 'active' : ''}`;
+                    pageBtn.textContent = i;
+                    pageBtn.addEventListener('click', () => goToPage(i));
+                    pageNumbers.appendChild(pageBtn);
+                } else if (i === currentPage - 3 || i === currentPage + 3) {
+                    const ellipsis = document.createElement('span');
+                    ellipsis.textContent = '...';
+                    ellipsis.style.margin = '0 5px';
+                    pageNumbers.appendChild(ellipsis);
+                }
+            }
+
+            // Navigation buttons
+            document.getElementById('firstPage').addEventListener('click', () => goToPage(1));
+            document.getElementById('prevPage').addEventListener('click', () => goToPage(currentPage - 1));
+            document.getElementById('nextPage').addEventListener('click', () => goToPage(currentPage + 1));
+            document.getElementById('lastPage').addEventListener('click', () => goToPage(totalPages));
+
+            // Items per page
+            document.getElementById('itemsPerPage').addEventListener('change', function() {
+                itemsPerPage = parseInt(this.value);
+                currentPage = 1;
+                renderTable();
+                initializePagination();
+            });
+
+            updatePaginationButtons();
+        }
+
+        function goToPage(page) {
+            const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+            if (page >= 1 && page <= totalPages) {
+                currentPage = page;
+                renderTable();
+                initializePagination();
+            }
+        }
+
+        function updatePaginationInfo() {
+            const startEntry = (currentPage - 1) * itemsPerPage + 1;
+            const endEntry = Math.min(currentPage * itemsPerPage, filteredData.length);
+            
+            document.getElementById('startEntry').textContent = startEntry;
+            document.getElementById('endEntry').textContent = endEntry;
+            document.getElementById('totalEntries').textContent = filteredData.length;
+        }
+
+        function updatePaginationButtons() {
+            const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+            
+            document.getElementById('firstPage').disabled = currentPage === 1;
+            document.getElementById('prevPage').disabled = currentPage === 1;
+            document.getElementById('nextPage').disabled = currentPage === totalPages;
+            document.getElementById('lastPage').disabled = currentPage === totalPages;
+        }
+
+        // Search functionality
+        function initializeSearch() {
+            const searchInput = document.getElementById('searchInput');
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                filteredData = mdlData.filter(item => 
+                    item.description.toLowerCase().includes(searchTerm) ||
+                    item.key.toString().includes(searchTerm)
+                );
+                currentPage = 1;
+                renderTable();
+                initializePagination();
+            });
+        }
+
+        // Sorting functionality
+        function initializeSorting() {
+            const sortableHeaders = document.querySelectorAll('.sortable');
+            
+            sortableHeaders.forEach(header => {
+                header.addEventListener('click', function() {
+                    const column = this.getAttribute('data-sort');
+                    
+                    if (sortColumn === column) {
+                        sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+                    } else {
+                        sortColumn = column;
+                        sortDirection = 'asc';
+                    }
+                    
+                    sortData();
+                    renderTable();
+                    initializePagination();
+                    updateSortIcons();
+                });
+            });
+        }
+
+        function sortData() {
+            filteredData.sort((a, b) => {
+                let aVal = a[sortColumn];
+                let bVal = b[sortColumn];
+                
+                if (sortColumn === 'key') {
+                    aVal = parseInt(aVal);
+                    bVal = parseInt(bVal);
+                } else if (sortColumn === 'access') {
+                    aVal = aVal ? 1 : 0;
+                    bVal = bVal ? 1 : 0;
+                } else {
+                    aVal = aVal.toLowerCase();
+                    bVal = bVal.toLowerCase();
+                }
+                
+                if (aVal < bVal) return sortDirection === 'asc' ? -1 : 1;
+                if (aVal > bVal) return sortDirection === 'asc' ? 1 : -1;
+                return 0;
+            });
+        }
+
+        function updateSortIcons() {
+            const sortableHeaders = document.querySelectorAll('.sortable');
+            
+            sortableHeaders.forEach(header => {
+                const icon = header.querySelector('.sort-icon');
+                const column = header.getAttribute('data-sort');
+                
+                icon.className = 'sort-icon fas fa-sort';
+                
+                if (column === sortColumn) {
+                    icon.classList.add(sortDirection === 'asc' ? 'asc' : 'desc');
+                }
+            });
+        }
+
+        // Role selector functionality
+        document.getElementById('roleSelect').addEventListener('change', function() {
+            console.log('Role changed to:', this.value);
+            // Here you would typically make an API call to update permissions
+        });
+
+        // Access checkbox functionality
+        document.addEventListener('change', function(e) {
+            if (e.target.classList.contains('access-checkbox')) {
+                const row = e.target.closest('tr');
+                const description = row.cells[0].textContent;
+                const isChecked = e.target.checked;
+                
+                console.log(`Access ${isChecked ? 'granted' : 'revoked'} for: ${description}`);
+                // Here you would typically make an API call to update access permissions
+            }
+        });
+    </script>
+</body>
+</html>
